@@ -1,0 +1,41 @@
+<IfModule mod_rewrite.c>
+    Options -Indexes
+    DirectoryIndex index.php index.html
+
+    <IfModule mod_alias.c>
+        RedirectMatch 307 ^/$ /index.php/
+    </IfModule>
+
+    <FilesMatch "^\.">
+        Require all denied
+    </FilesMatch>
+
+    <FilesMatch "\.(env|log|sql|yml|yaml)$">
+        Require all denied
+    </FilesMatch>
+
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /
+
+        # Block access to storage directly
+        RewriteRule ^storage/ - [F,L]
+
+        # Front controller pattern
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^(.*)$ index.php [QSA,L]
+    </IfModule>
+
+    <IfModule mod_headers.c>
+        Header set X-Frame-Options "SAMEORIGIN"
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-XSS-Protection "1; mode=block"
+    </IfModule>
+
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_value memory_limit 256M
+</IfModule>

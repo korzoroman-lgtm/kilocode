@@ -1,0 +1,17 @@
+# Disable directory listing
+Options -Indexes
+
+# Enable rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>
+
+# Deny access to all files by default
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
+
+# Allow access to specific files
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$">
+    Require all granted
+</FilesMatch>
